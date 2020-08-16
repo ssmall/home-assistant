@@ -21,13 +21,6 @@ jobs:
           buildx-version: latest
           qemu-version: latest
       -
-        name: Docker Login
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
-      -
         name: Docker Buildx (build)
         run: |
           docker buildx build \
@@ -35,6 +28,14 @@ jobs:
             --output "type=image,push=false" \
             --tag spencersmall/home-assistant-socat:latest \
             --file Dockerfile .
+      -
+        name: Docker Login
+        if: github.ref == 'refs/heads/main'
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
       -
         name: Docker Buildx (push)
         if: github.ref == 'refs/heads/main'
