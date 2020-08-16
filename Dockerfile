@@ -1,10 +1,10 @@
-FROM --platform=${BUILDPLATFORM:-linux/amd64} homeassistant/home-assistant:stable
+FROM --platform=${TARGETPLATFORM:-linux/amd64} homeassistant/home-assistant:stable
 
 RUN apk add --no-cache socat
 
+ENV PROGRAM_ARGS=
 ENV SOCAT_ZIGBEE_ADDRESS=
 ENV SOCAT_ZWAVE_ADDRESS=
-ENV PROGRAM_ARGS=
 
 COPY start.sh /
 
