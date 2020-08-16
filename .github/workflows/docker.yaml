@@ -37,7 +37,8 @@ jobs:
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
             --output "type=image,push=false" \
-            --tag spencersmall/home-assistant-socat:latest,spencersmall/home-assistant-socat:${{ github.sha }} \
+            --tag spencersmall/home-assistant-socat:latest \
+            --tag spencersmall/home-assistant-socat:${{ github.sha }} \
             --file Dockerfile .
       -
         name: Docker Login
@@ -55,7 +56,8 @@ jobs:
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
             --output "type=image,push=true" \
-            --tag spencersmall/home-assistant-socat:latest,spencersmall/home-assistant-socat:${{ github.sha }} \
+            --tag spencersmall/home-assistant-socat:latest \
+            --tag spencersmall/home-assistant-socat:${{ github.sha }} \
             --file Dockerfile .
       -
         name: Docker Check Manifest
