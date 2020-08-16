@@ -30,26 +30,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
       -
-        name: Docker Buildx (build)
-        run: |
-          docker buildx build \
-            --cache-from "type=local,src=/tmp/.buildx-cache" \
-            --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
-            --output "type=image,push=false" \
-            --tag spencersmall/home-assistant-socat:latest \
-            --tag spencersmall/home-assistant-socat:${{ github.sha }} \
-            --file Dockerfile .
-      -
         name: Docker Login
-        if: github.ref == 'refs/heads/main'
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
       -
-        name: Docker Buildx (push)
+        name: Docker Buildx (build and push edge)
+        run: |
+          docker buildx build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --cache-to "type=local,dest=/tmp/.buildx-cache" \
+            --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
+            --output "type=image,push=false" \
+            --tag spencersmall/home-assistant-socat:edge \
+            --file Dockerfile .
+      -
+        name: Docker Buildx (build and push latest)
         if: github.ref == 'refs/heads/main'
         run: |
           docker buildx build \
@@ -57,12 +55,7 @@ jobs:
             --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
             --output "type=image,push=true" \
             --tag spencersmall/home-assistant-socat:latest \
-            --tag spencersmall/home-assistant-socat:${{ github.sha }} \
             --file Dockerfile .
-      -
-        name: Docker Check Manifest
-        run: |
-          docker run --rm mplatform/mquery spencersmall/home-assistant-socat:latest
       -
         name: Clear
         if: always()
