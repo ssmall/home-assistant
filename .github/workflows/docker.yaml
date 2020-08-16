@@ -28,15 +28,15 @@ jobs:
         run: |
           echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
       -
-        name: Docker Buildx (build and push edge)
+        name: Docker Buildx (build)
         run: |
           docker buildx build \
             --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
-            --output "type=image,push=true" \
-            --tag spencersmall/home-assistant-socat:edge \
+            --output "type=image,push=false" \
+            --tag spencersmall/home-assistant-socat:latest \
             --file Dockerfile .
       -
-        name: Docker Buildx (build and push latest)
+        name: Docker Buildx (push)
         if: github.ref == 'refs/heads/main'
         run: |
           docker buildx build \
