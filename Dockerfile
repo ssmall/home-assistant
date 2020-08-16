@@ -1,4 +1,4 @@
-FROM homeassistant/home-assistant:stable
+FROM --platform=${BUILDPLATFORM:-linux/amd64} homeassistant/home-assistant:stable
 
 RUN apk add --no-cache socat
 
