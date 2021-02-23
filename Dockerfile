@@ -1,4 +1,4 @@
-FROM homeassistant/home-assistant:stable
+FROM homeassistant/home-assistant:2021.2.3
 
 RUN apk add --no-cache socat
 
